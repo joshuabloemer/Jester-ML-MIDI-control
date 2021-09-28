@@ -6,7 +6,7 @@ from controls import turn_on, turn_off
 from threading import Thread
 
 
-out_port = mido.open_output('USB20MIDI 1')
+# out_port = mido.open_output('USB20MIDI 1')
 keys = "1234567890qwertzuiopüasdfghjklöäyxcvbnm"
 
 def on_press(key):
@@ -28,8 +28,8 @@ def on_release(key):
         pass
 
 
-turn_off(out_port)
-mid = mido.MidiFile("test.MID")
+# turn_off(out_port)
+mid = mido.MidiFile("test2.MID")
 # for i, track in enumerate(mid.tracks):
 #     print('Track {}: {}'.format(i, track.name))
 #     for msg in track:
@@ -38,17 +38,19 @@ mid = mido.MidiFile("test.MID")
 
 for msg in mid.tracks[0]:
     print(msg)
-    time.sleep(msg.time)
-    out_port.send(msg)
+    bpm = 120
+    tickInSeconds = 60/(bpm*msg.time)
+    time.sleep(tickInSeconds)
+    # out_port.send(msg)
     
-turn_on(out_port,1,vel = 30)
-for msg in mido.MidiFile('test.mid').play():
-    print(msg)
-    out_port.send(msg)
-with mido.open_input("PD 12 1") as inport:
-    for msg in inport:
-        turn_on(out_port,msg.note,msg.velocity)
-        print(msg)
+# turn_on(out_port,1,vel = 30)
+# for msg in mido.MidiFile('test.mid').play():
+#     print(msg)
+#     out_port.send(msg)
+# with mido.open_input("PD 12 1") as inport:
+#     for msg in inport:
+#         turn_on(out_port,msg.note,msg.velocity)
+#         print(msg)
 
 # asdCollect events until released
 # with keyboard.Listener(
