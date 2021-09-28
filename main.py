@@ -4,7 +4,7 @@ from pynput import keyboard
 import playsound
 from controls import turn_on, turn_off
 from threading import Thread
-
+from mingus.midi.midi_file_in import MidiFile
 
 # out_port = mido.open_output('USB20MIDI 1')
 keys = "1234567890qwertzuiopüasdfghjklöäyxcvbnm"
@@ -35,13 +35,16 @@ mid = mido.MidiFile("test2.MID")
 #     for msg in track:
 #         print(msg)
 
+file = MidiFile()
+parsed = file.parse_midi_file("test2.mid")
+print(parsed)
 
-for msg in mid.tracks[0]:
-    print(msg)
-    bpm = 120
-    tickInSeconds = 60/(bpm*msg.time)
-    time.sleep(tickInSeconds)
-    # out_port.send(msg)
+# for msg in mid.tracks[0]:
+#     print(msg)
+#     bpm = 120
+#     tickInSeconds = 1 / (30*960) * msg.time
+#     time.sleep(tickInSeconds)
+#     # out_port.send(msg)
     
 # turn_on(out_port,1,vel = 30)
 # for msg in mido.MidiFile('test.mid').play():
@@ -58,4 +61,3 @@ for msg in mid.tracks[0]:
 #         on_press=on_press,
 #         on_release=on_release) as listener:
 #     listener.join()
-
