@@ -6,7 +6,7 @@ from controls import turn_on, turn_off
 from threading import Thread
 from mingus.midi.midi_file_in import MidiFile
 
-# out_port = mido.open_output('USB20MIDI 1')
+out_port = mido.open_output('USB20MIDI 1')
 keys = "1234567890qwertzuiopüasdfghjklöäyxcvbnm"
 
 def on_press(key):
@@ -28,25 +28,23 @@ def on_release(key):
         pass
 
 
-# turn_off(out_port)
+turn_off(out_port)
 mid = mido.MidiFile("test2.MID")
-# for i, track in enumerate(mid.tracks):
-#     print('Track {}: {}'.format(i, track.name))
-#     for msg in track:
-#         print(msg)
 
 file = MidiFile()
 parsed = file.parse_midi_file("test2.mid")
-print(parsed)
+spt = (5/parsed[0][2]["ticks_per_beat"])/10     # seconds per tick
+print(spt)
 
-# for msg in mid.tracks[0]:
-#     print(msg)
-#     bpm = 120
-#     tickInSeconds = 1 / (30*960) * msg.time
-#     time.sleep(tickInSeconds)
-#     # out_port.send(msg)
-    
-# turn_on(out_port,1,vel = 30)
+
+
+for msg in mid.tracks[0]:
+    time.sleep(spt*msg.time)
+    print(msg)
+    out_port.send(msg)
+
+
+# turn_on(out_port,5,vel = 60)
 # for msg in mido.MidiFile('test.mid').play():
 #     print(msg)
 #     out_port.send(msg)
