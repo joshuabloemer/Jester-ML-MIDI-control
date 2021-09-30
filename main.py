@@ -3,8 +3,10 @@ import mido
 from pynput import keyboard
 import playsound
 from controls import turn_on, turn_off
-from threading import Thread
 from mingus.midi.midi_file_in import MidiFile
+from multiprocessing import Process
+from threading import Thread
+from playsound import playsound
 
 out_port = mido.open_output('USB20MIDI 1')
 keys = "1234567890qwertzuiopüasdfghjklöäyxcvbnm"
@@ -27,6 +29,8 @@ def on_release(key):
     except AttributeError:
         pass
 
+def play_music():
+    playsound("E:/Downloads/Britney Spears - Work B_ch (Official Music Video).mp3")
 
 turn_off(out_port)
 mid = mido.MidiFile("test2.MID")
@@ -34,12 +38,22 @@ mid = mido.MidiFile("test2.MID")
 file = MidiFile()
 parsed = file.parse_midi_file("test2.mid")
 spt = (5/parsed[0][2]["ticks_per_beat"])/10     # seconds per tick
-print(spt)
+# print(spt)
+T = Thread(target=play_music) # create thread
+T.start() # Launch created thread
 
-
-
-for msg in mid.tracks[0]:
-    time.sleep(spt*msg.time)
+dec_next = 0
+for i,msg in enumerate(mid.tracks[0]):
+    
+    if msg.time == 0:
+        mid_tick = 2
+        dec_next += 2
+    else:
+        mid_tick = msg.time - dec_next    
+        dec_next = 0
+    time.sleep(spt*mid_tick)
+    print(msg.time)
+    print(i)
     print(msg)
     out_port.send(msg)
 
